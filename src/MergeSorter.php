@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Hellosworldos\SortedLinkedList;
 
-class MergeSortingStrategy implements SortingStrategy
+class MergeSorter implements Sorter
 {
     public function sort(?LinkedListNode $head): ?LinkedListNode
     {
@@ -27,7 +28,9 @@ class MergeSortingStrategy implements SortingStrategy
         $fast = $head->next;
 
         while ($fast !== null && $fast->next !== null) {
-            $slow = $slow->next;
+            $nextSlow = $slow->next;
+            assert($nextSlow !== null);
+            $slow = $nextSlow;
             $fast = $fast->next->next;
         }
 
@@ -36,23 +39,37 @@ class MergeSortingStrategy implements SortingStrategy
 
     private function sortedMerge(?LinkedListNode $a, ?LinkedListNode $b): ?LinkedListNode
     {
-        $dummy = new LinkedListNode(0);
-        $tail = $dummy;
+        $head = null;
+        $tail = null;
 
         while ($a !== null && $b !== null) {
             if ($a->value <= $b->value) {
-                $tail->linkNext($a);
+                $node = $a;
                 $a = $a->next;
             } else {
-                $tail->linkNext($b);
+                $node = $b;
                 $b = $b->next;
             }
-            $tail = $tail->next;
-            $tail->unlinkNext();
+
+            $node->unlinkNext();
+
+            if ($tail === null) {
+                $head = $node;
+                $tail = $node;
+            } else {
+                $tail->linkNext($node);
+                $tail = $node;
+            }
         }
 
-        $tail->linkNext($a ?? $b);
+        $remainder = $a ?? $b;
 
-        return $dummy->next;
+        if ($tail === null) {
+            $head = $remainder;
+        } elseif ($remainder !== null) {
+            $tail->linkNext($remainder);
+        }
+
+        return $head;
     }
 }

@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace Hellosworldos\SortedLinkedList;
 
-class SortedLinkedList
-{
-    public ?LinkedListNode $head;
+use Generator;
+use IteratorAggregate;
 
-    public function __construct(?LinkedListNode $head = null, private readonly SortingStrategy $sortingStrategy = new MergeSortingStrategy())
-    {
-        $this->head = $head;
+/**
+ * @implements IteratorAggregate<int, int|string>
+ */
+class SortedLinkedList implements IteratorAggregate
+{
+    public function __construct(
+        private(set) ?LinkedListNode $head = null,
+    ) {
     }
 
     /**
-     * Build a sorted linked list from an array of values using merge sort on the list.
-     * This is O(n log n) time and uses O(log n) stack for recursion (top-down).
-     * Values are cast to int to match LinkedListNode signature.
      * @param array<int|string> $items
      */
-    public static function fromArray(array $items, SortingStrategy $sortingStrategy = new MergeSortingStrategy()): self
+    public static function fromArray(array $items, Sorter $sortingStrategy = new MergeSorter()): self
     {
         $head = null;
         $tail = null;
@@ -39,18 +40,26 @@ class SortedLinkedList
             }
         }
 
-        return new self($sortingStrategy->sort($head), $sortingStrategy);
+        return new self($sortingStrategy->sort($head));
     }
 
-    public function toArray(): array
+    /**
+     * @return Generator<int, int|string, mixed, void>
+     */
+    public function getIterator(): Generator
     {
-        $out = [];
         $node = $this->head;
         while ($node !== null) {
-            $out[] = $node->value;
+            yield $node->value;
             $node = $node->next;
         }
-        return $out;
+    }
+
+    /**
+     * @return array<int, int|string>
+     */
+    public function toArray(): array
+    {
+        return iterator_to_array($this->getIterator());
     }
 }
-

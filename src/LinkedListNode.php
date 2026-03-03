@@ -6,9 +6,9 @@ namespace Hellosworldos\SortedLinkedList;
 
 use UnexpectedValueException;
 
-class ListNode
+class LinkedListNode
 {
-    private(set) ?self $next = null;
+    public private(set) ?self $next = null;
 
     public function __construct(
         public readonly int|string $value,
@@ -30,7 +30,7 @@ class ListNode
         return $this;
     }
 
-    private function validateTypes(ListNode $nextNode): void
+    private function validateTypes(LinkedListNode $nextNode): void
     {
         $thisType = gettype($this->value);
         $nextType = gettype($nextNode->value);

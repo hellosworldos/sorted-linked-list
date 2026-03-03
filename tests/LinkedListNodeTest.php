@@ -1,19 +1,20 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Hellosworldos\SortedLinkedList\Tests;
 
-use Hellosworldos\SortedLinkedList\ListNode;
+use Hellosworldos\SortedLinkedList\LinkedListNode;
 use PHPUnit\Framework\TestCase;
 use UnexpectedValueException;
 
-class ListNodeTest extends TestCase
+class LinkedListNodeTest extends TestCase
 {
     public function testItLinksNodeOfTheSameTypeInt(): void
     {
         // arrange
-        $node1 = new ListNode(1);
-        $node2 = new ListNode(2);
+        $node1 = new LinkedListNode(1);
+        $node2 = new LinkedListNode(2);
 
         // act
         $node1->linkNext($node2);
@@ -25,8 +26,8 @@ class ListNodeTest extends TestCase
     public function testItLinksNodeOfTheSameTypeString(): void
     {
         // arrange
-        $node1 = new ListNode('first');
-        $node2 = new ListNode('second');
+        $node1 = new LinkedListNode('first');
+        $node2 = new LinkedListNode('second');
 
         // act
         $node1->linkNext($node2);
@@ -38,8 +39,8 @@ class ListNodeTest extends TestCase
     public function testItThrowsExceptionWhenNodesAreNotTheSameType(): void
     {
         // arrange
-        $node1 = new ListNode(1);
-        $node2 = new ListNode('second');
+        $node1 = new LinkedListNode(1);
+        $node2 = new LinkedListNode('second');
 
         // assert
         $this->expectException(UnexpectedValueException::class);
@@ -51,8 +52,8 @@ class ListNodeTest extends TestCase
     public function testAfterUnlinkingTheNextIsNull(): void
     {
         // arrange
-        $node = new ListNode(1)
-            ->linkNext(new ListNode(2));
+        $node = new LinkedListNode(1)
+            ->linkNext(new LinkedListNode(2));
 
         // act
         $node->unlinkNext();
