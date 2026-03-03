@@ -105,6 +105,24 @@ class SortedLinkedList implements IteratorAggregate
     }
 
     /**
+     * @return array<int, int|string>
+     */
+    public function sliceValues(int $headNodesCount): array
+    {
+        $head = $this->head;
+        $values = [];
+        for ($i = 0; $i < $headNodesCount; $i++) {
+            if ($head === null) {
+                break;
+            }
+            $values[] = $head->value;
+            $head = $head->next;
+        }
+
+        return $values;
+    }
+
+    /**
      * @return Generator<int, int|string, mixed, void>
      */
     public function getIterator(): Generator

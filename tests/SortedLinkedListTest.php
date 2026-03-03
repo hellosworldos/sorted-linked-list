@@ -264,4 +264,60 @@ class SortedLinkedListTest extends TestCase
 
         self::assertSame($list, $result);
     }
+
+    /**
+     * @return iterable<string, array{initial: array<int|string>, count: int, expected: array<int|string>}>
+     */
+    public static function provideDataForSliceValues(): iterable
+    {
+        yield 'slice zero returns empty' => [
+            'initial' => [1, 2, 3],
+            'count' => 0,
+            'expected' => [],
+        ];
+
+        yield 'slice one returns first element' => [
+            'initial' => [1, 2, 3, 4, 5],
+            'count' => 1,
+            'expected' => [1],
+        ];
+
+        yield 'slice some returns first n elements' => [
+            'initial' => [1, 2, 3, 4, 5],
+            'count' => 3,
+            'expected' => [1, 2, 3],
+        ];
+
+        yield 'slice all returns all elements' => [
+            'initial' => [1, 2, 3],
+            'count' => 3,
+            'expected' => [1, 2, 3],
+        ];
+
+        yield 'slice more than size returns all elements' => [
+            'initial' => [1, 2, 3],
+            'count' => 10,
+            'expected' => [1, 2, 3],
+        ];
+
+        yield 'slice from empty list returns empty' => [
+            'initial' => [],
+            'count' => 5,
+            'expected' => [],
+        ];
+    }
+
+    /**
+     * @param array<int|string> $initial
+     * @param array<int|string> $expected
+     */
+    #[DataProvider('provideDataForSliceValues')]
+    public function testSliceValues(array $initial, int $count, array $expected): void
+    {
+        $list = SortedLinkedList::fromArray($initial);
+
+        $result = $list->sliceValues($count);
+
+        self::assertSame($expected, $result);
+    }
 }

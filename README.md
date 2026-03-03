@@ -27,4 +27,7 @@ $newList = $intList->shiftHead(5);
 # dropping the first nodes according to the new limit
 $newList = $intList->setSize(2);
 
+# Get first X node values from the list (minimal ones)
+$nodeValues = $intList->sliceValues(2);
+
 ```
