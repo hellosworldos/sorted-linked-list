@@ -1,0 +1,27 @@
+{
+    "name": "hellosworldos/sorted-linked-list",
+    "description": "Sorted Linked List Library",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^13.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Hellosworldos\\SortedLinkedList\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hellosworldos\\SortedLinkedList\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Yury Ksenevich",
+            "email": "yury@spadar.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}

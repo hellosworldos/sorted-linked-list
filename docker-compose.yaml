@@ -1,0 +1,19 @@
+services:
+  php:
+    image: "php:${PHP_VERSION}"
+    user: "${USER_ID}:${GROUP_ID}"
+    volumes:
+      - type: bind
+        source: /etc/passwd
+        target: /etc/passwd
+        read_only: true
+
+      - type: bind
+        source: /etc/group
+        target: /etc/group
+        read_only: true
+
+      - type: bind
+        source: ./
+        target: /app
+    working_dir: /app
