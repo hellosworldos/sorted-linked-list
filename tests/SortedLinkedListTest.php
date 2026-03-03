@@ -66,6 +66,74 @@ class SortedLinkedListTest extends TestCase
     }
 
     /**
+     * @return iterable<string, array{initial: array<int|string>, add: int|string, expected: array<int|string>}>
+     */
+    public static function provideDataForAddValue(): iterable
+    {
+        yield 'add to empty list' => [
+            'initial' => [],
+            'add' => 5,
+            'expected' => [5],
+        ];
+
+        yield 'add integer becomes new head' => [
+            'initial' => [3, 5, 7],
+            'add' => 1,
+            'expected' => [1, 3, 5, 7],
+        ];
+
+        yield 'add integer at end' => [
+            'initial' => [1, 3, 5],
+            'add' => 7,
+            'expected' => [1, 3, 5, 7],
+        ];
+
+        yield 'add integer in middle' => [
+            'initial' => [1, 3, 7],
+            'add' => 5,
+            'expected' => [1, 3, 5, 7],
+        ];
+
+        yield 'add duplicate integer' => [
+            'initial' => [1, 3, 5],
+            'add' => 3,
+            'expected' => [1, 3, 3, 5],
+        ];
+
+        yield 'add string becomes new head' => [
+            'initial' => ['banana', 'cherry'],
+            'add' => 'apple',
+            'expected' => ['apple', 'banana', 'cherry'],
+        ];
+
+        yield 'add string at end' => [
+            'initial' => ['apple', 'banana'],
+            'add' => 'cherry',
+            'expected' => ['apple', 'banana', 'cherry'],
+        ];
+
+        yield 'add string in middle' => [
+            'initial' => ['apple', 'cherry'],
+            'add' => 'banana',
+            'expected' => ['apple', 'banana', 'cherry'],
+        ];
+    }
+
+    /**
+     * @param array<int|string> $initial
+     * @param array<int|string> $expected
+     */
+    #[DataProvider('provideDataForAddValue')]
+    public function testAddValue(array $initial, int|string $add, array $expected): void
+    {
+        $list = SortedLinkedList::fromArray($initial);
+
+        $list->addValue($add);
+
+        self::assertSame($expected, $list->toArray());
+    }
+
+    /**
      * @param array<int|string> $inputValues
      * @param array<int|string> $expectedOrder
      */

@@ -20,7 +20,7 @@ class SortedLinkedList implements IteratorAggregate
     /**
      * @param array<int|string> $items
      */
-    public static function fromArray(array $items, Sorter $sortingStrategy = new MergeSorter()): self
+    public static function fromArray(array $items, Sorter $sorter = new MergeSorter()): self
     {
         $head = null;
         $tail = null;
@@ -40,7 +40,35 @@ class SortedLinkedList implements IteratorAggregate
             }
         }
 
-        return new self($sortingStrategy->sort($head));
+        return new self($sorter->sort($head));
+    }
+
+    public function addValue(int|string $value): self
+    {
+        $newNode = new LinkedListNode($value);
+
+        if (null === $this->head) {
+            $this->head = $newNode;
+
+            return $this;
+        } elseif ($this->head->value >= $value) {
+            $newNode->linkNext($this->head);
+            $this->head = $newNode;
+
+            return $this;
+        }
+
+        $prev = $this->head;
+        while ($prev->next !== null && $prev->next->value < $value) {
+            $prev = $prev->next;
+        }
+
+        if ($prev->next !== null) {
+            $newNode->linkNext($prev->next);
+        }
+        $prev->linkNext($newNode);
+
+        return $this;
     }
 
     /**
