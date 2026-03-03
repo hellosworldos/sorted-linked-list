@@ -38,6 +38,8 @@ jobs:
         with:
           name: vendor
           path: vendor
+      - name: Restore vendor bin permissions
+        run: chmod +x vendor/bin/*
       - name: Run PHP CS fixer
         run: vendor/bin/php-cs-fixer check --allow-risky=yes
 
@@ -53,6 +55,8 @@ jobs:
         with:
           name: vendor
           path: vendor
+      - name: Restore vendor bin permissions
+        run: chmod +x vendor/bin/*
       - name: Run phpstan
         run: vendor/bin/phpstan analyse
 
@@ -68,5 +72,7 @@ jobs:
         with:
           name: vendor
           path: vendor
+      - name: Restore vendor bin permissions
+        run: chmod +x vendor/bin/*
       - name: Run PHPUnit tests
         run: vendor/bin/phpunit
