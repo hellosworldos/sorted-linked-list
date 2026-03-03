@@ -1,0 +1,67 @@
+name: PHP CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: composer:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate composer
+        run: composer validate
+      - name: Install dependencies
+        run: composer install
+      - name: Upload vendor artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vendor
+          path: vendor/
+          retention-days: 1
+
+  cs_fixer:
+    needs: build
+    runs-on: ubuntu-latest
+    container:
+      image: php:8.3-cli-alpine
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download vendor artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: vendor
+      - name: Run PHP CS fixer
+        run: vendor/bin/php-cs-fixer check --allow-risky=yes
+
+  phpstan:
+    needs: build
+    runs-on: ubuntu-latest
+    container:
+      image: php:8.4-cli-alpine
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download vendor artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: vendor
+      - name: Run phpstan
+        run: vendor/bin/phpstan analyse
+
+  test_php85:
+    needs: build
+    runs-on: ubuntu-latest
+    container:
+      image: php:8.5-cli-alpine
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download vendor artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: vendor
+      - name: Run PHPUnit tests
+        run: vendor/bin/phpunit
