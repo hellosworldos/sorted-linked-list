@@ -17,7 +17,7 @@ composer:
 		--user $(USER_ID):$(GROUP_ID) \
 		--volume /etc/passwd:/etc/passwd:ro \
 		--volume /etc/group:/etc/group:ro \
-		composer:2.8 $(COMPOSER_COMMAND)
+		composer:2.9 $(COMPOSER_COMMAND)
 
 composer-install:
 	make composer COMPOSER_COMMAND='install'
