@@ -37,6 +37,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: vendor
+          path: vendor
       - name: Run PHP CS fixer
         run: vendor/bin/php-cs-fixer check --allow-risky=yes
 
@@ -51,6 +52,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: vendor
+          path: vendor
       - name: Run phpstan
         run: vendor/bin/phpstan analyse
 
@@ -65,5 +67,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: vendor
+          path: vendor
       - name: Run PHPUnit tests
         run: vendor/bin/phpunit
