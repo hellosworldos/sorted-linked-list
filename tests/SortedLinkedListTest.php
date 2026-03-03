@@ -12,7 +12,7 @@ class SortedLinkedListTest extends TestCase
 {
     public function testEmptyListGetsEmptyHead(): void
     {
-        $list = new SortedLinkedList();
+        $list = SortedLinkedList::fromArray([]);
 
         self::assertNull($list->head);
     }
@@ -148,5 +148,120 @@ class SortedLinkedListTest extends TestCase
         }
 
         self::assertSame($expectedOrder, $result);
+    }
+
+    /**
+     * @return iterable<string, array{initial: array<int|string>, drop: int, expected: array<int|string>}>
+     */
+    public static function provideDataForShiftHead(): iterable
+    {
+        yield 'drop default one node' => [
+            'initial' => [1, 2, 3],
+            'drop' => 1,
+            'expected' => [2, 3],
+        ];
+
+        yield 'drop zero nodes' => [
+            'initial' => [1, 2, 3],
+            'drop' => 0,
+            'expected' => [1, 2, 3],
+        ];
+
+        yield 'drop multiple nodes' => [
+            'initial' => [1, 2, 3, 4, 5],
+            'drop' => 3,
+            'expected' => [4, 5],
+        ];
+
+        yield 'drop all nodes' => [
+            'initial' => [1, 2, 3],
+            'drop' => 3,
+            'expected' => [],
+        ];
+
+        yield 'drop more than size returns empty' => [
+            'initial' => [1, 2, 3],
+            'drop' => 10,
+            'expected' => [],
+        ];
+
+        yield 'drop from empty list returns empty' => [
+            'initial' => [],
+            'drop' => 1,
+            'expected' => [],
+        ];
+    }
+
+    /**
+     * @param array<int|string> $initial
+     * @param array<int|string> $expected
+     */
+    #[DataProvider('provideDataForShiftHead')]
+    public function testShiftHead(array $initial, int $drop, array $expected): void
+    {
+        $list = SortedLinkedList::fromArray($initial);
+
+        $result = $list->shiftHead($drop);
+
+        self::assertSame($expected, $result->toArray());
+    }
+
+    /**
+     * @return iterable<string, array{initial: array<int|string>, newSize: int, expected: array<int|string>}>
+     */
+    public static function provideDataForSetSize(): iterable
+    {
+        yield 'new size larger than size returns same content' => [
+            'initial' => [1, 2, 3],
+            'newSize' => 10,
+            'expected' => [1, 2, 3],
+        ];
+
+        yield 'new size equal to size returns same content' => [
+            'initial' => [1, 2, 3],
+            'newSize' => 3,
+            'expected' => [1, 2, 3],
+        ];
+
+        yield 'new size smaller returns last n elements' => [
+            'initial' => [1, 2, 3, 4, 5],
+            'newSize' => 3,
+            'expected' => [3, 4, 5],
+        ];
+
+        yield 'new size one returns last element' => [
+            'initial' => [1, 2, 3, 4, 5],
+            'newSize' => 1,
+            'expected' => [5],
+        ];
+
+        yield 'new size zero returns empty' => [
+            'initial' => [1, 2, 3],
+            'newSize' => 0,
+            'expected' => [],
+        ];
+    }
+
+    /**
+     * @param array<int|string> $initial
+     * @param array<int|string> $expected
+     */
+    #[DataProvider('provideDataForSetSize')]
+    public function testSetSize(array $initial, int $newSize, array $expected): void
+    {
+        $list = SortedLinkedList::fromArray($initial);
+
+        $result = $list->setSize($newSize);
+
+        self::assertSame($expected, $result->toArray());
+    }
+
+    public function testSetSizeWithLargerSizeReturnsSelf(): void
+    {
+        $list = SortedLinkedList::fromArray([1, 2, 3]);
+
+        $result = $list->setSize(10);
+
+        self::assertSame($list, $result);
     }
 }

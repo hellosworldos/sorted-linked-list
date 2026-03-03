@@ -14,6 +14,7 @@ class SortedLinkedList implements IteratorAggregate
 {
     public function __construct(
         private(set) ?LinkedListNode $head = null,
+        private(set) int $size = 0,
     ) {
     }
 
@@ -24,6 +25,7 @@ class SortedLinkedList implements IteratorAggregate
     {
         $head = null;
         $tail = null;
+        $size = 0;
 
         if ([] === $items) {
             return new self();
@@ -31,16 +33,17 @@ class SortedLinkedList implements IteratorAggregate
 
         foreach ($items as $item) {
             $node = new LinkedListNode($item);
+            $size += 1;
             if (null === $head) {
                 $head = $node;
                 $tail = $node;
             } else {
-                $tail->linkNext($node);
+                $tail?->linkNext($node);
                 $tail = $node;
             }
         }
 
-        return new self($sorter->sort($head));
+        return new self($sorter->sort($head), $size);
     }
 
     public function addValue(int|string $value): self
@@ -69,6 +72,36 @@ class SortedLinkedList implements IteratorAggregate
         $prev->linkNext($newNode);
 
         return $this;
+    }
+
+    public function shiftHead(int $dropFirstNodesCount = 1): self
+    {
+        $head = $this->head;
+        for ($i = 0; $i < $dropFirstNodesCount; $i++) {
+            if ($head === null) {
+                break;
+            }
+            $head = $head->next;
+        }
+
+        return new self($head);
+    }
+
+    public function setSize(int $newSize): self
+    {
+        if ($newSize > $this->size) {
+            return $this;
+        }
+
+        $head = $this->head;
+        for ($i = $this->size; $i > $newSize; $i--) {
+            if ($head === null) {
+                break;
+            }
+            $head = $head->next;
+        }
+
+        return new self($head);
     }
 
     /**
