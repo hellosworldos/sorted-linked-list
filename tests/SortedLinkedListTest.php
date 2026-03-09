@@ -190,6 +190,12 @@ class SortedLinkedListTest extends TestCase
             'drop' => 1,
             'expected' => [],
         ];
+
+        yield 'drop more than size' => [
+            'initial' => [1, 3, 5],
+            'drop' => 4,
+            'expected' => [],
+        ];
     }
 
     /**
@@ -204,6 +210,7 @@ class SortedLinkedListTest extends TestCase
         $result = $list->shiftHead($drop);
 
         self::assertSame($expected, $result->toArray());
+        self::assertSame(count($expected), $result->size);
     }
 
     /**
@@ -254,6 +261,7 @@ class SortedLinkedListTest extends TestCase
         $result = $list->setSize($newSize);
 
         self::assertSame($expected, $result->toArray());
+        self::assertSame(count($expected), $result->size);
     }
 
     public function testSetSizeWithLargerSizeReturnsSelf(): void

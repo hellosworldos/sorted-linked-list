@@ -12,7 +12,7 @@ use IteratorAggregate;
  */
 class SortedLinkedList implements IteratorAggregate
 {
-    public function __construct(
+    private function __construct(
         private(set) ?LinkedListNode $head = null,
         private(set) int $size = 0,
     ) {
@@ -84,7 +84,7 @@ class SortedLinkedList implements IteratorAggregate
             $head = $head->next;
         }
 
-        return new self($head);
+        return new self($head, max(0, $this->size - $dropFirstNodesCount));
     }
 
     public function setSize(int $newSize): self
@@ -101,7 +101,7 @@ class SortedLinkedList implements IteratorAggregate
             $head = $head->next;
         }
 
-        return new self($head);
+        return new self($head, max(0, $newSize));
     }
 
     /**
